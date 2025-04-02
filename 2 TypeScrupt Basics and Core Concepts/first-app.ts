@@ -45,28 +45,100 @@ function add(a: number, b: number): number {
 }
 
 //////////// Defining Function Types
-function calculate(
-   a: number,
-   b: number,
-   calcFn: (a: number, b: number) => number
-) {
+function calculate(a: number, b: number, calcFn: AddFn) {
    calcFn(a, b);
 }
 
 calculate(2, 3, add);
 
 //////////// Creating Custom Types / Type Aliases
+type AddFn = (a: number, b: number) => number;
 
 //////////// Defining Object Types with Interfaces
+interface Credentials {
+   password: string;
+   email: string;
+}
+
+let creds: Credentials;
+
+creds = {
+   password: 'abc',
+   email: 'teste@example.com',
+};
 
 //////////// Interfaces vs Custom Types
+class AuthCredentials implements Credentials {
+   email: string;
+   password: string;
+   userName: string;
+}
 
 //////////// Mergin Types
+type Admin = {
+   permissions: string[];
+};
+
+type AppUser = {
+   userName: string;
+};
+
+type AppAdmin = Admin & AppUser;
+
+let admin: AppAdmin;
+
+admin = {
+   permissions: ['login'],
+   userName: 'Max',
+};
+
+//// Interfaces
+interface IAdmin {
+   permissions: string[];
+}
+
+interface IAppUser {
+   userName: string;
+}
+
+interface IAppAdmin extends IAdmin, IAppUser {}
+
+let iAdmin: AppAdmin;
+
+iAdmin = {
+   permissions: ['login'],
+   userName: 'Max',
+};
 
 //////////// Being Specific With Literal Types
+let role: 'admin' | 'user' | 'editor'; // 'admin', 'user', 'editor'
+
+role = 'user';
 
 //////////// Adding Type Guards
+type Role = 'admin' | 'user' | 'editor';
 
-//////////// Type Guards & Type Narrowing - A Closer Look
+let rol: Role;
 
-//////////// Making Sense Of Generuc Types
+rol = 'user';
+
+function performAction(action: string, role: Role) {
+   if (role === 'admin') {
+      // ...
+   }
+}
+
+//////////// Making Sense Of Generic Types
+let roles: Array<Role>;
+
+type DataStorage<T> = {
+   storage: T[];
+   add: (data: T) => void;
+};
+
+const textStorage: DataStorage<string> = {
+   storage: [],
+   add(data) {
+      this.storage.push(data);
+   },
+};
